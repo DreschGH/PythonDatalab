@@ -55,3 +55,36 @@ class DataLab:   #<-- Main Class
             plt.title(label=f'Missing Values - {self.df_name}')
             plt.show()
             
+    def explore_distributions(self):
+        """
+        Plots histograms for numerical data to understand skewness and range.
+        """
+        print('\n[2] Visualizing numerical data distributions')
+        num_cols = self.df.select_dtypes(include=[np.number]).columns
+        if len(num_cols) == 0:
+            print('\n There are no numerical columns in this dataframe')
+            return
+        n_cols = 3
+        n_rows =(len(num_cols)-1)//n_cols+1
+        fig, axes =  plt.subplots(n_rows, n_cols, figsize = (15, 4 * n_rows))
+        axes = axes.flatten()
+
+        for i, col in enumerate(num_cols):
+            sns.histplot(self.df[col].dropna(), kde=True, ax=axes[i], color='skyblue')
+            axes[i].set_title(f'Dist: {col}')
+            mean_val = self.df[col].mean()
+            median_val = self.df[col].median()
+            axes[i].axvline(mean_val, color = 'red', linestyle = '--', label = f'Mean {mean_val:.2f}')
+            axes[i].axvline(median_val, color = 'green', linestyle = '--', label = f'Median {median_val:.2f}')
+            axes[i].legend()
+        
+        for j in range(i+1, len(axes)):
+            fig.delaxes(axes[j])
+
+        plt.tight_layout()
+        plt.show() 
+
+
+nexxera = pd.read_csv(r"V:\Financeiro\02. Planejamento\02.01 - Projetos\125.1 - Nexxera Conciliacao\125.1.1 - Relatório Nexxera\ce-relatorio-documentos.csv", sep = ";", decimal=',', thousands='.', encoding = 'latin-1', skiprows=2, skipfooter=1)
+lab = DataLab(df = nexxera, df_name="Relatório Nexxera")
+lab.explore_distributions()
