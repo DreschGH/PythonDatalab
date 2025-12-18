@@ -8,7 +8,7 @@ import logging
 #--> plot style
 sns.set_theme(style="whitegrid")
 plt.rcParams['figure.figsize'] = (12, 6)
-
+sns.color_palette("tab10")
 
 class DataLab:   #<-- Main Class
     '''
@@ -51,7 +51,7 @@ class DataLab:   #<-- Main Class
             print('\nColumns with missing data:')
             print(missing_values)
             plt.figure(figsize=(10,16))
-            sns.heatmap(self.df.isna(), cbar=False, cmap='viridis', yticklabels=False)
+            sns.heatmap(self.df.isna(), cbar=False, yticklabels=False)
             plt.title(label=f'Missing Values - {self.df_name}')
             plt.show()
             
@@ -84,7 +84,9 @@ class DataLab:   #<-- Main Class
         plt.tight_layout()
         plt.show() 
 
+if __name__ == "__main__":
+    df = pd.read_excel(io=r"C:\Python\125.1\ConciliacaoAR_Nexxera_Extrato\resultadoConciliação.xlsx", engine='openpyxl')
+    df = df[['R1BRAD1', 'R2BRAD1', 'R1CITI1', 'R2CITI1', 'R1ITAU3', 'R2ITAU3', 'R2ITAU3', 'R1SANT1', 'R1BBRA1', 'Final']]
 
-nexxera = pd.read_csv(r"V:\Financeiro\02. Planejamento\02.01 - Projetos\125.1 - Nexxera Conciliacao\125.1.1 - Relatório Nexxera\ce-relatorio-documentos.csv", sep = ";", decimal=',', thousands='.', encoding = 'latin-1', skiprows=2, skipfooter=1)
-lab = DataLab(df = nexxera, df_name="Relatório Nexxera")
-lab.explore_distributions()
+    lab = DataLab(df = df, df_name="Conciliação Nexxera")
+    lab.health_check()
